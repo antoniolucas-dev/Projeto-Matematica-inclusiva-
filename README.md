@@ -1,21 +1,47 @@
-# Matemática Inclusiva
+# 📚 Matemática Inclusiva
 
-Site do projeto: um carrinho de supermercado inteligente que usa localização, direção e distância
-para orientar, por áudio, pessoas com deficiência visual.
+Uma plataforma educacional desenvolvida para tornar o aprendizado da matemática mais acessível, interativo e inclusivo.
 
-## Estrutura
+## Sobre o projeto
 
-- `index.html`: conteúdo da página
-- `style.css`: visual (cores, tipografia, temas claro, escuro e alto contraste)
-- `script.js`: opções de leitura e mapa interativo
-- `images/`: logo e foto de abertura
+O Matemática Inclusiva tem como objetivo oferecer uma experiência de aprendizagem mais dinâmica, utilizando recursos visuais e atividades para facilitar a compreensão dos conteúdos matemáticos.
 
-Não precisa instalar nada: abra o `index.html` no navegador. As fontes (Atkinson Hyperlegible e
-Bricolage Grotesque) carregam do Google Fonts; sem internet, a página usa as fontes do sistema.
+## Tecnologias utilizadas
 
-## Como o mapa funciona
+- HTML5
+- CSS3
+- JavaScript
+- Vite
+- npm
 
-O supermercado é um plano com coordenadas, com a entrada em (0, 0). Cada trajeto é uma lista de
-pontos em `ROTAS`, no `script.js`. O código calcula sozinho os trechos retos, a direção de cada
-curva (pelo produto vetorial entre trechos seguidos) e a distância total (a soma dos trechos).
-Para criar um novo destino, basta acrescentar uma rota e um botão com o mesmo `data-rota`.
+## Como executar o projeto
+
+**1. Clone o repositório**
+
+```bash
+git clone https://github.com/antoniolucas-dev/Projeto-Matematica-inclusiva-.git
+```
+
+**2. Entre na pasta**
+
+```bash
+cd Projeto-Matematica-inclusiva-
+```
+
+**3. Instale as dependências**
+
+```bash
+npm install
+```
+
+**4. Inicie o servidor de desenvolvimento**
+
+```bash
+npm run dev
+```
+
+**5. Abra o endereço indicado no terminal**, geralmente `http://localhost:5173/`.
+
+---
+
+Desenvolvido com dedicação para tornar a experiência mais inclusiva.
