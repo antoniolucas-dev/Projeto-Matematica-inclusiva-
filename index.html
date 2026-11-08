@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light" data-contrast="normal">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Matemática Inclusiva: um carrinho que mostra o caminho</title>
+  <meta name="description" content="Proposta de carrinho inteligente que usa Matemática e orientação por áudio para ajudar pessoas com deficiência visual a circular no supermercado.">
+  <meta name="theme-color" content="#1739C9">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600..800&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    /* Aplica as preferências salvas antes da primeira pintura, para a página não piscar. */
+    (function () {
+      try {
+        var p = JSON.parse(localStorage.getItem("matematica-inclusiva-v2") || "{}");
+        var r = document.documentElement;
+        var escuro = typeof p.escuro === "boolean" ? p.escuro : matchMedia("(prefers-color-scheme: dark)").matches;
+        r.dataset.theme = escuro ? "dark" : "light";
+        r.dataset.contrast = p.contraste ? "high" : "normal";
+        if (p.fonte) r.style.fontSize = (100 + p.fonte * 12.5) + "%";
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="wrap topo__in">
+      <a class="marca" href="#inicio" aria-label="Matemática Inclusiva, voltar ao início">
+        <img src="images/senac-logo-comercio.png" alt="Senac" width="124" height="40">
+        <span class="marca__nome">Matemática<br>Inclusiva</span>
+      </a>
+
+      <nav class="menu" aria-label="Seções da página">
+        <a href="#ideia">A ideia</a>
+        <a href="#como">Como funciona</a>
+        <a href="#trajeto">Teste o trajeto</a>
+        <a href="#aprender">Aprendizagem</a>
+        <a href="#impacto">Impacto</a>
+      </nav>
+
+      <div class="ajustes">
+        <button class="ajustes__btn" type="button" aria-label="Opções de leitura" aria-expanded="false" aria-controls="painel-ajustes">
+          <span aria-hidden="true" class="ajustes__aa">Aa</span>
+          <span>Leitura</span>
+        </button>
+        <div class="painel" id="painel-ajustes" role="group" aria-label="Opções de leitura" hidden>
+          <p class="painel__tit">Leia do seu jeito</p>
+          <div class="painel__fonte">
+            <span id="rot-fonte">Tamanho do texto</span>
+            <div class="painel__botoes" role="group" aria-labelledby="rot-fonte">
+              <button type="button" class="mini" data-acao="fonte-menos" aria-label="Diminuir texto">A−</button>
+              <output class="painel__valor" id="fonte-valor" aria-live="polite">100%</output>
+              <button type="button" class="mini" data-acao="fonte-mais" aria-label="Aumentar texto">A+</button>
+            </div>
+          </div>
+          <button type="button" class="opcao" data-acao="contraste" aria-pressed="false">
+            <span>Alto contraste</span><span class="opcao__estado">Desligado</span>
+          </button>
+          <button type="button" class="opcao" data-acao="escuro" aria-pressed="false">
+            <span>Tema escuro</span><span class="opcao__estado">Desligado</span>
+          </button>
+          <button type="button" class="opcao" data-acao="ouvir" aria-pressed="false">
+            <span>Ouvir texto selecionado</span><span class="opcao__estado">Desligado</span>
+          </button>
+          <button type="button" class="opcao opcao--limpa" data-acao="restaurar">Restaurar padrão</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- Abertura -->
+    <section class="hero" id="inicio" aria-labelledby="t-hero">
+      <div class="wrap hero__grid">
+        <div class="hero__texto">
+          <h1 id="t-hero">Um carrinho que mostra o caminho.</h1>
+          <p class="hero__sub">
+            Matemática Inclusiva é uma proposta de carrinho inteligente: localização, direção e distância
+            viram instruções por áudio para ajudar pessoas com deficiência visual a circular no supermercado.
+          </p>
+          <div class="hero__acoes">
+            <a class="btn btn--piso" href="#trajeto">Teste o trajeto</a>
+            <a class="link-claro" href="#ideia">Conheça a ideia</a>
+          </div>
+        </div>
+
+        <figure class="foto">
+          <div class="foto__marco">
+            <div class="foto__img">
+              <img src="images/carrinho.jpg" width="1200" height="900"
+                   alt="Homem de óculos escuros e bengala caminha por um corredor de supermercado empurrando um carrinho azul com um módulo na lateral.">
+            </div>
+            <p class="fala">
+              <span class="onda" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+              <span>Exemplo de instrução: “Siga em frente. Hortifruti à sua direita.”</span>
+            </p>
+          </div>
+          <figcaption>Ilustração conceitual. Não representa um produto existente.</figcaption>
+        </figure>
+      </div>
+      <div class="piso" aria-hidden="true"></div>
+    </section>
+
+    <!-- A ideia -->
+    <section class="s" id="ideia" aria-labelledby="t-ideia">
+      <div class="wrap ideia">
+        <h2 class="pergunta" id="t-ideia">
+          Como um carrinho inteligente pode ajudar o cliente a encontrar produtos e circular pelo mercado com mais autonomia?
+        </h2>
+        <div class="ideia__textos">
+          <div>
+            <h3>O problema</h3>
+            <p>Quem tem deficiência visual pode ter dificuldade para localizar produtos e setores entre os corredores. As compras ficam mais demoradas e podem exigir ajuda de outras pessoas.</p>
+          </div>
+          <div>
+            <h3>A hipótese</h3>
+            <p>Um carrinho com orientação por áudio e localização dos produtos pode facilitar as compras: indica o caminho até o setor e avisa quando é hora de mudar de direção.</p>
+          </div>
+          <p class="curriculo">Componente curricular: Matemática, com tecnologia, acessibilidade e inclusão social.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Como funciona -->
+    <section class="s s--suave" id="como" aria-labelledby="t-como">
+      <div class="wrap">
+        <h2 class="titulo-sec" id="t-como">Do pedido ao produto, em quatro passos.</h2>
+
+        <ol class="passos">
+          <li class="passo">
+            <span class="passo__disco">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M18 11v1a6 6 0 0 1-12 0v-1M12 18v3"/></svg>
+              <b class="passo__n">1</b>
+            </span>
+            <h3>Pedir</h3>
+            <p>A pessoa diz qual produto procura.</p>
+          </li>
+          <li class="passo">
+            <span class="passo__disco">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+              <b class="passo__n">2</b>
+            </span>
+            <h3>Localizar</h3>
+            <p>O carrinho encontra o setor no mapa do mercado.</p>
+          </li>
+          <li class="passo">
+            <span class="passo__disco">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+              <b class="passo__n">3</b>
+            </span>
+            <h3>Orientar</h3>
+            <p>Instruções curtas por áudio guiam o percurso: “siga em frente”, “vire à direita”.</p>
+          </li>
+          <li class="passo">
+            <span class="passo__disco">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 22V3"/><path d="M5 4h13l-2.5 4.5L18 13H5"/></svg>
+              <b class="passo__n">4</b>
+            </span>
+            <h3>Chegar</h3>
+            <p>Um aviso indica que o produto está por perto.</p>
+          </li>
+        </ol>
+
+        <p class="nota"><strong>Possível evolução:</strong> sensores adequados também poderiam alertar sobre obstáculos.</p>
+      </div>
+    </section>
+
+    <!-- Demonstração -->
+    <section class="s s--noite" id="trajeto" aria-labelledby="t-trajeto">
+      <div class="wrap demo">
+        <div class="demo__ctrl">
+          <h2 class="titulo-sec" id="t-trajeto">Escolha um setor e acompanhe o trajeto.</h2>
+          <p class="demo__intro">
+            Cada trajeto é uma sequência de trechos retos e curvas em um plano com coordenadas.
+            Somando os trechos, descobrimos a distância percorrida.
+          </p>
+
+          <div class="chips" role="group" aria-label="Setor de destino">
+            <button type="button" class="chip" data-rota="horti" aria-pressed="false">Hortifruti</button>
+            <button type="button" class="chip" data-rota="merc" aria-pressed="false">Mercearia</button>
+            <button type="button" class="chip" data-rota="lat" aria-pressed="false">Laticínios</button>
+          </div>
+
+          <div class="agora" role="status" aria-live="polite">
+            <p class="agora__txt" id="agora">Escolha um setor para ver o caminho.</p>
+          </div>
+
+          <ol class="trechos" id="trechos" aria-label="Instruções do trajeto"></ol>
+
+          <p class="conta" id="conta" hidden>
+            <span class="conta__rot">Distância percorrida</span>
+            <strong class="conta__eq" id="conta-eq"></strong>
+            <span class="conta__un">quadrados do mapa</span>
+          </p>
+
+          <div class="demo__botoes">
+            <button type="button" class="ctrl" id="btn-som" aria-pressed="false">
+              Narração em áudio: <span id="som-estado">desligada</span>
+            </button>
+            <button type="button" class="ctrl" id="btn-repetir" disabled>Repetir trajeto</button>
+          </div>
+        </div>
+
+        <figure class="mapa">
+          <svg class="mapa__svg" viewBox="0 0 580 416" role="img" aria-labelledby="mapa-t mapa-d">
+            <title id="mapa-t">Mapa ilustrativo de um supermercado</title>
+            <desc id="mapa-d">Plano com coordenadas. A entrada fica no canto inferior esquerdo e há três setores: Hortifruti, Mercearia e Laticínios.</desc>
+            <defs>
+              <mask id="rev" maskUnits="userSpaceOnUse" x="0" y="0" width="580" height="416">
+                <path id="rota-mask" class="m-mask" d="M0 0"/>
+              </mask>
+            </defs>
+
+            <rect class="m-chao" x="24" y="28" width="532" height="352" rx="20"/>
+
+            <path class="m-corr" d="M50 360H530M50 360V60H530M290 60V360M530 60V360M290 180H530"/>
+
+            <g class="m-nos" id="nos"></g>
+
+            <g class="m-setor" data-setor="horti">
+              <rect class="m-bloco" x="86" y="96" width="168" height="228" rx="14"/>
+              <text class="m-nome" x="170" y="210">Hortifruti</text>
+            </g>
+            <g class="m-setor" data-setor="merc">
+              <rect class="m-bloco" x="326" y="216" width="168" height="108" rx="14"/>
+              <text class="m-nome" x="410" y="270">Mercearia</text>
+            </g>
+            <g class="m-setor" data-setor="lat">
+              <rect class="m-bloco" x="326" y="96" width="168" height="48" rx="14"/>
+              <text class="m-nome" x="410" y="120">Laticínios</text>
+            </g>
+
+            <path id="rota-borda" class="m-borda" d="M0 0"/>
+            <path id="rota" class="m-rota" d="M0 0"/>
+            <path id="rota-pontos" class="m-pontos" d="M0 0" mask="url(#rev)"/>
+
+            <g id="pino" class="m-pino-g" hidden>
+              <circle class="m-pino" r="22"/>
+              <text class="m-xy" id="pino-xy"></text>
+            </g>
+
+            <g id="carro" class="m-carro" transform="translate(50 360)">
+              <circle class="m-carro__c" r="14"/>
+              <path class="m-carro__seta" d="M0-8L7 6 0 2-7 6Z"/>
+            </g>
+
+            <path class="m-entrada" d="M50 384l-7 10h14z"/>
+            <text class="m-eixo m-eixo--ini" x="62" y="394">Entrada</text>
+
+            <g class="m-eixo" id="eixos"></g>
+          </svg>
+
+          <figcaption class="mapa__leg">
+            <span class="leg"><i class="leg__carro"></i>Você</span>
+            <span class="leg"><i class="leg__pino"></i>Destino</span>
+            <span class="leg"><i class="leg__rota"></i>Trajeto</span>
+            <span class="mapa__aviso">Mapa ilustrativo e sem escala real. Não simula um carrinho de verdade.</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="wrap criterios">
+        <h3>Como saber se a proposta é acessível?</h3>
+        <ul>
+          <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Orientações curtas, claras e compreensíveis</li>
+          <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Rotas organizadas por direção, distância e localização</li>
+          <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Avaliação feita com a participação de usuários</li>
+          <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Segurança, autonomia e respeito às diferentes necessidades</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Aprendizagem -->
+    <section class="s" id="aprender" aria-labelledby="t-aprender">
+      <div class="wrap">
+        <div class="cab-duas">
+          <h2 class="titulo-sec" id="t-aprender">Aprender Matemática para transformar o cotidiano.</h2>
+          <p>A atividade aproximou conhecimentos matemáticos de uma necessidade real e mostrou como eles contribuem para a acessibilidade e a inclusão social.</p>
+        </div>
+
+        <div class="ciclo">
+          <article>
+            <h3>Ação</h3>
+            <p class="ciclo__sub">Investigação e planejamento</p>
+            <p>Os estudantes investigaram as dificuldades das compras e usaram localização, distância e direção para planejar trajetos.</p>
+          </article>
+          <article>
+            <h3>Reflexão</h3>
+            <p class="ciclo__sub">Acessibilidade e autonomia</p>
+            <p>Discutiram barreiras, clareza das informações, facilidade de uso e os limites da solução.</p>
+          </article>
+          <article>
+            <h3>Nova ação</h3>
+            <p class="ciclo__sub">Estruturação da proposta</p>
+            <p>Organizaram o modelo do carrinho com raciocínio matemático, criatividade e colaboração.</p>
+          </article>
+        </div>
+
+        <div class="marcas">
+          <h3>O que os estudantes desenvolveram</h3>
+          <ul>
+            <li>Domínio técnico-científico</li>
+            <li>Visão crítica</li>
+            <li>Autonomia digital</li>
+            <li>Comunicação e colaboração</li>
+            <li>Atitude criativa e empreendedora</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impacto -->
+    <section class="s s--impacto" id="impacto" aria-labelledby="t-impacto">
+      <div class="wrap impacto">
+        <div>
+          <h2 class="titulo-sec" id="t-impacto">Acessibilidade é um caminho para participar.</h2>
+          <p class="impacto__lead">
+            O projeto reconhece a acessibilidade como condição para a participação social e estimula um olhar atento às necessidades de pessoas com deficiência visual.
+          </p>
+        </div>
+        <ul class="ganhos">
+          <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Mais autonomia e confiança durante as compras</li>
+          <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Menor dependência de acompanhantes para encontrar produtos</li>
+          <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Estabelecimentos comerciais mais acessíveis</li>
+          <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Mais consciência sobre inclusão e respeito</li>
+        </ul>
+      </div>
+      <div class="wrap">
+        <p class="aviso">
+          <strong>Uma proposta conceitual, não uma solução validada.</strong>
+          Para funcionar em um supermercado real, ela precisaria de desenvolvimento, avaliação de acessibilidade e testes com usuários, para medir segurança, precisão e facilidade de uso.
+        </p>
+      </div>
+    </section>
+
+    <!-- Fecho -->
+    <section class="fecho" aria-labelledby="t-fecho">
+      <div class="wrap fecho__in">
+        <div>
+          <h2 id="t-fecho">O próximo caminho começa com um olhar mais inclusivo.</h2>
+          <p>Matemática, criatividade e colaboração a serviço da participação social.</p>
+        </div>
+        <a class="btn btn--azul" href="#inicio">Voltar ao início</a>
+      </div>
+      <div class="piso" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="wrap rodape__in">
+      <img src="images/senac-logo-comercio.png" alt="Senac" width="124" height="40">
+      <p>Projeto educacional de Matemática, tecnologia e inclusão social. Proposta conceitual, sem validação de produto.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
